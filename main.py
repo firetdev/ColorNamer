@@ -21,7 +21,7 @@ def distance(color, center):
     }
     dist = math.sqrt(diff['r'] * diff['r'] + diff['g'] * diff['g'] + diff['b'] * diff['b'])
     if dist == 0:
-        return 255
+        return 2048
     return math.sqrt(diff['r'] * diff['r'] + diff['g'] * diff['g'] + diff['b'] * diff['b'])
 
 # kMeans function
@@ -45,12 +45,13 @@ def getCentroid(img, x):
     # Do centroid averaging
     for u in range(0, 100):
         groups = [[], [], [], [], [], [], []]
-        prevDist = 10000000
-        index = ''
         for i in colors:
+            prevDist = 10000000
+            index = ''
             for e in range(0, 7):
-                if distance(i, centroidSet[e]) < prevDist:
-                    prevDist = distance(i, centroidSet[e])
+                dist = distance(i, centroidSet[e])
+                if dist < prevDist:
+                    prevDist = dist
                     index = e
             groups[index].append(i)
         for i in range(0, 7):
@@ -64,8 +65,8 @@ def getCentroid(img, x):
                 totals['g'] += e.g
                 totals['b'] += e.b
             centroidSet[i].r = totals['r'] / (len(groups[i]) + 1)
-            centroidSet[i].r = totals['g'] / (len(groups[i]) + 1)
-            centroidSet[i].r = totals['b'] / (len(groups[i]) + 1)
+            centroidSet[i].g = totals['g'] / (len(groups[i]) + 1)
+            centroidSet[i].b = totals['b'] / (len(groups[i]) + 1)
     return centroidSet
 
 # Get centroids
