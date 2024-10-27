@@ -71,10 +71,12 @@ def getCentroid(img, x, names):
     }
     return finalData
 
-# Get centroids
+# Get input
 myImage = input('Image: ')
 coordsFileName = input('File with coords of 7 colors: ')
 namesFileName = input('File with color names: ')
+
+# Prepare coordinates and names
 coordsFile = open(coordsFileName, 'r')
 coords = []
 for i in coordsFile:
@@ -83,13 +85,17 @@ coordsFile.close()
 namesFile = open(namesFileName, 'r')
 myNames = []
 for i in namesFile:
-    myNames.append(int(i))
+    myNames.append(i)
 namesFile.close()
+
+# Get centroids
 data = getCentroid('image.jpg', coords, myNames)
 centroids = data['centroids']
+
+# Write output
 output = ''
 for i in range(0, len(centroids)):
-    output += centroids(i).toString() + ' (' + data['names'][i] + '\n'
+    output += centroids[i].toString() + ' (' + data['names'][i] + '\n'
 outputFile = open('training.txt', 'w')
 outputFile.write(output)
 outputFile.close()
