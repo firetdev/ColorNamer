@@ -25,7 +25,7 @@ def distance(color, center):
     return math.sqrt(diff['r'] * diff['r'] + diff['g'] * diff['g'] + diff['b'] * diff['b'])
 
 # kMeans function
-def getCentroid(img, x):
+def getCentroid(img, x, names):
     spectrumImg = Image.open(img)
     pixels = spectrumImg.load()
     groups = []
@@ -65,20 +65,31 @@ def getCentroid(img, x):
             centroidSet[i].r = totals['r'] / (len(groups[i]) + 1)
             centroidSet[i].g = totals['g'] / (len(groups[i]) + 1)
             centroidSet[i].b = totals['b'] / (len(groups[i]) + 1)
-    return centroidSet
+    finalData = {
+        'centroids': centroidSet,
+        'names': names
+    }
+    return finalData
 
 # Get centroids
 myImage = input('Image: ')
 coordsFileName = input('File with coords of 7 colors: ')
+namesFileName = input('File with color names: ')
 coordsFile = open(coordsFileName, 'r')
 coords = []
 for i in coordsFile:
     coords.append(int(i))
 coordsFile.close()
-centroids = getCentroid('image.jpg', coords)
+namesFile = open(namesFileName, 'r')
+myNames = []
+for i in namesFile:
+    myNames.append(int(i))
+namesFile.close()
+data = getCentroid('image.jpg', coords, myNames)
+centroids = data['centroids']
 output = ''
-for i in centroids:
-    output += i.toString() + '\n'
+for i in range(0, len(centroids)):
+    output += centroids(i).toString() + ' (' + data['names'][i] + '\n'
 outputFile = open('training.txt', 'w')
 outputFile.write(output)
 outputFile.close()
