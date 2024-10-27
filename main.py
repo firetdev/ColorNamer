@@ -28,33 +28,31 @@ def distance(color, center):
 def getCentroid(img, x):
     spectrumImg = Image.open(img)
     pixels = spectrumImg.load()
+    groups = []
+    groupsDefault = []
     # Create colors array
     colors = []
     for i in range(0, spectrumImg.size[0]):
         colors.append(Clr(pixels[i, 10][0], pixels[i, 10][1], pixels[i, 10][2]))
     # Assign centroids
-    centroidSet = [
-        Clr(pixels[x[0], 10][0], pixels[x[0], 10][1], pixels[x[0], 10][2]),
-        Clr(pixels[x[1], 10][0], pixels[x[1], 10][1], pixels[x[1], 10][2]),
-        Clr(pixels[x[2], 10][0], pixels[x[2], 10][1], pixels[x[2], 10][2]),
-        Clr(pixels[x[3], 10][0], pixels[x[3], 10][1], pixels[x[3], 10][2]),
-        Clr(pixels[x[4], 10][0], pixels[x[4], 10][1], pixels[x[4], 10][2]),
-        Clr(pixels[x[5], 10][0], pixels[x[5], 10][1], pixels[x[5], 10][2]),
-        Clr(pixels[x[6], 10][0], pixels[x[6], 10][1], pixels[x[6], 10][2])
-    ]
+    centroidSet = []
+    for i in range(0, len(x)):
+        centroidSet.append(Clr(pixels[x[i], 10][0], pixels[x[i], 10][1], pixels[x[i], 10][2]))
+        groups.append([])
+        groupsDefault.append([])
     # Do centroid averaging
     for u in range(0, 100):
-        groups = [[], [], [], [], [], [], []]
+        groups = groupsDefault
         for i in colors:
             prevDist = 10000000
             index = ''
-            for e in range(0, 7):
+            for e in range(0, len(x)):
                 dist = distance(i, centroidSet[e])
                 if dist < prevDist:
                     prevDist = dist
                     index = e
             groups[index].append(i)
-        for i in range(0, 7):
+        for i in range(0, len(x)):
             totals = {
                 'r': 0,
                 'g': 0,
