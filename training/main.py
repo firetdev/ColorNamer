@@ -95,7 +95,7 @@ centroids = data['centroids']
 # Write output
 output = ''
 for i in range(0, len(centroids)):
-    output += centroids[i].toString() + ' ' + data['names'][i] + '\n'
+    output += centroids[i].toString() + ' ' + data['names'][i]
 outputFile = open('training.txt', 'w')
 outputFile.write(output)
 outputFile.close()

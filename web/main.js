@@ -16,8 +16,8 @@ function main() {
             let text1 = '';  // Just the rgb
             let text2 = '';  // Just the color names
             // Next: isolate RGBs and color names
-            text1 = rawTrainingText.replace(new RegExp('\(([A-Za-z]+)\)', 'g'), '');
-            text2 = rawTrainingText.replace(new RegExp('rgb\(\d{1,3},\s*\d{1,3},\s*\d{1,3}\)\s+\(([^)]+)\)', 'g'), '');
+            text1 = rawTrainingText.replace(new RegExp('([A-Za-z]+)', 'g'), '');
+            text2 = rawTrainingText.replace(new RegExp('\d{1-3}, \d{1-3}, \d{1-3}', 'g'), '');
             console.log(`${text1}:${text2}`);
         })
         .catch((error) => {
