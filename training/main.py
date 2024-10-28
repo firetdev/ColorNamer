@@ -73,7 +73,7 @@ def getCentroid(img, x, names):
 
 # Get input
 myImage = input('Image: ')
-coordsFileName = input('File with coords of 7 colors: ')
+coordsFileName = input('File with coords of colors: ')
 namesFileName = input('File with color names: ')
 
 # Prepare coordinates and names
