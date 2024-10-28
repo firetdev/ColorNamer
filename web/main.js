@@ -8,7 +8,14 @@ function Clr(red, green, blue) {
 }
 
 // Distance function
-function distance
+function distance(c1, c2) {
+    const diff = {
+        r: c2.r - c1.r,
+        g: c2.g - c1.g,
+        b: c2.b - c1.b
+    };
+    return Math.sqrt(diff.r * diff.r + diff.g * diff.g + diff.b * diff.b);
+}
 
 // Main function
 function main() {
@@ -34,6 +41,18 @@ function main() {
                 let numbers = rgbValues[i].match(new RegExp('(\\d{1-3},)', 'g'));
                 colorArray.push(new Clr(numbers[0], numbers[1], numbers[2]));
             }
+            // Find closest centroid
+            let prevDist = 10000000;
+            let index = 0;
+            for (let i = 0; i < colorArray.length; i += 1) {
+                let dist = distance(color, colorArray[i]);
+                if (dist < prevDist) {
+                    prevDist = dist;
+                    index = i;
+                }
+            }
+            // Output
+            document.getElementById('clr').textContent = colors[index];
         })
         .catch((error) => {
             console.error(error);
