@@ -13,17 +13,12 @@ function main() {
         })
         .then((data) => {
             rawTrainingText = data;
+            let text1 = '';  // Just the rgb
+            let text2 = '';  // Just the color names
+            // Next: isolate RGBs and color names
+            console.log(`${text1}:${text2}`);
         })
         .catch((error) => {
             console.error(error);
         });
-    let trainingTextNoSpaces = rawTrainingText.replace(new RegExp(' [^ \n]', 'g'), '');
-    let text1 = '';  // Just the rgb
-    let text2 = '';  // Just the color names
-    text1 = rawTrainingText.replace(new RegExp('(red|orange|yellow|green|blue|purple|pink)', 'gi'), '');
-    text2 = rawTrainingText.replace(new RegExp('rgb\(\d{1,3},\d{1,3},\d{1,3}\)', 'gi'), '');
 }
-
-document.getElementById('button').addEventListener('onclick', (e) => {
-    main();
-});
