@@ -14,12 +14,13 @@ function distance(c1, c2) {
         g: c2.g - c1.g,
         b: c2.b - c1.b
     };
+    console.log(Math.sqrt(diff.r * diff.r + diff.g * diff.g + diff.b * diff.b));
     return Math.sqrt(diff.r * diff.r + diff.g * diff.g + diff.b * diff.b);
 }
 
 // Main function
 function main() {
-    let color = document.getElementById('colorInput').value;
+    const color = document.getElementById('colorInput').value;
     let rawTrainingText = '';
     fetch('getTraining.php')
         .then((response) => {
@@ -34,18 +35,20 @@ function main() {
             let text2 = '';  // Just the color names
             text1 = rawTrainingText.replace(new RegExp('([A-Za-z]+)', 'g'), '');
             text2 = rawTrainingText.replace(new RegExp('\\d{1,3}, \\d{1,3}, \\d{1,3}', 'g'), '');
-            let rgbValues = text1.split('\n');
-            let colors = text2.split('\n');
+            const rgbValues = text1.split('\n');
+            const colors = text2.split('\n');
             let colorArray = [];
             for (let i = 0; i < rgbValues.length; i += 1) {
-                let numbers = rgbValues[i].match(new RegExp('(\\d{1-3},)', 'g'));
+                const numbers = rgbValues[i].match(new RegExp('(\\d+)\\s*,\\s*(\\d+)\\s*,\\s*(\\d+)', 'g'));
                 colorArray.push(new Clr(numbers[0], numbers[1], numbers[2]));
             }
+            const colorNumbers = color.match(new RegExp('(\\d+)\\s*,\\s*(\\d+)\\s*,\\s*(\\d+)', 'g'));
+            const colorObject = new Clr(colorNumbers[0], colorNumbers[1], colorNumbers[2]);
             // Find closest centroid
             let prevDist = 10000000;
             let index = 0;
             for (let i = 0; i < colorArray.length; i += 1) {
-                let dist = distance(color, colorArray[i]);
+                let dist = distance(colorObject, colorArray[i]);
                 if (dist < prevDist) {
                     prevDist = dist;
                     index = i;
