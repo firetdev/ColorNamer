@@ -14,7 +14,6 @@ function distance(c1, c2) {
         g: c2.g - c1.g,
         b: c2.b - c1.b
     };
-    console.log(Math.sqrt(diff.r * diff.r + diff.g * diff.g + diff.b * diff.b));
     return Math.sqrt(diff.r * diff.r + diff.g * diff.g + diff.b * diff.b);
 }
 
@@ -39,11 +38,11 @@ function main() {
             const colors = text2.split('\n');
             let colorArray = [];
             for (let i = 0; i < rgbValues.length; i += 1) {
-                const numbers = rgbValues[i].match(new RegExp('(\\d+)\\s*,\\s*(\\d+)\\s*,\\s*(\\d+)', 'g'));
-                colorArray.push(new Clr(numbers[0], numbers[1], numbers[2]));
+                const numbers = rgbValues[i].match(new RegExp('(\\d+)\\s*,\\s*(\\d+)\\s*,\\s*(\\d+)'));
+                colorArray.push(new Clr(numbers[1], numbers[2], numbers[3]));
             }
-            const colorNumbers = color.match(new RegExp('(\\d+)\\s*,\\s*(\\d+)\\s*,\\s*(\\d+)', 'g'));
-            const colorObject = new Clr(colorNumbers[0], colorNumbers[1], colorNumbers[2]);
+            const colorNumbers = color.match(new RegExp('(\\d+)\\s*,\\s*(\\d+)\\s*,\\s*(\\d+)'));
+            const colorObject = new Clr(colorNumbers[1], colorNumbers[2], colorNumbers[3]);
             // Find closest centroid
             let prevDist = 10000000;
             let index = 0;
