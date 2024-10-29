@@ -34,12 +34,13 @@ function main() {
             let text2 = '';  // Just the color names
             text1 = rawTrainingText.replace(new RegExp('([A-Za-z]+)', 'g'), '');
             text2 = rawTrainingText.replace(new RegExp('\\d{1,3}, \\d{1,3}, \\d{1,3}', 'g'), '');
-            const rgbValues = text1.split('\n');
+            const rgbValues = text1.split('\n').map(line => line.trim()).filter(line => line.length > 0);
             const colors = text2.split('\n');
             let colorArray = [];
             for (let i = 0; i < rgbValues.length; i += 1) {
                 const numbers = rgbValues[i].match(new RegExp('(\\d+)\\s*,\\s*(\\d+)\\s*,\\s*(\\d+)'));
-                colorArray.push(new Clr(numbers[1], numbers[2], numbers[3]));
+                if (numbers)
+                    colorArray.push(new Clr(numbers[1], numbers[2], numbers[3]));
             }
             const colorNumbers = color.match(new RegExp('(\\d+)\\s*,\\s*(\\d+)\\s*,\\s*(\\d+)'));
             const colorObject = new Clr(colorNumbers[1], colorNumbers[2], colorNumbers[3]);
