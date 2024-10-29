@@ -1,7 +1,8 @@
 import math
+import re
 from PIL import Image
 
-centroids = []  # Array of centroids (will be put into centroids.txt)
+centroidsArray = []  # Array of centroids (will be put into centroids.txt)
 
 # Color class
 class Clr:
@@ -22,37 +23,58 @@ def distance(color, center):
     dist = math.sqrt(diff['r'] * diff['r'] + diff['g'] * diff['g'] + diff['b'] * diff['b'])
     if dist == 0:
         return 2048
-    return math.sqrt(diff['r'] * diff['r'] + diff['g'] * diff['g'] + diff['b'] * diff['b'])
+    else:
+        return math.sqrt(diff['r'] * diff['r'] + diff['g'] * diff['g'] + diff['b'] * diff['b'])
 
 # kMeans function
-def getCentroid(img, x, names):
-    spectrumImg = Image.open(img)
-    pixels = spectrumImg.load()
+def getCentroid(data):
+    text1 = re.sub(r'[A-Za-z]+', '', data)
+    text2 = re.sub(r'\d{1,3},\s*\d{1,3},\s*\d{1,3}', '', data)
     groups = []
     groupsDefault = []
-    # Create colors array
+    # Get names
+    text2 = text2.splitlines()
+    names = []
+    for i in text2:
+        names.append(i)
+    # Make colors array
     colors = []
-    for i in range(0, spectrumImg.size[0]):
-        colors.append(Clr(pixels[i, 10][0], pixels[i, 10][1], pixels[i, 10][2]))
-    # Assign centroids
-    centroidSet = []
-    for i in range(0, len(x)):
-        centroidSet.append(Clr(pixels[x[i], 10][0], pixels[x[i], 10][1], pixels[x[i], 10][2]))
-        groups.append([])
-        groupsDefault.append([])
-    # Do centroid averaging
-    for u in range(0, 100):
+    if True:  # Indent, so that i, e, and u will not carry into next block
+        i = 0
+        while i < 255:
+            e = 0
+            while e < 255:
+                u = 0
+                while u < 255:
+                    colors.append(Clr(i, e, u))
+                    u += 5
+                e += 5
+            i += 5
+    # Make centroids array
+    centroids = []
+    rgbValues = text1.splitlines()
+    for i in rgbValues:
+        match = re.match(r'(\d+)\s*,\s*(\d+)\s*,\s*(\d+)', i)
+        if match:
+            numbers = match.groups()
+            centroids.append(Clr(int(numbers[0]), int(numbers[1]), int(numbers[2])))
+            groups.append([])
+            groupsDefault.append([])
+    oldCentroids = []
+    # Do averaging
+    for u in range(0, 20):
+        oldCentroids = centroids
         groups = groupsDefault
         for i in colors:
             prevDist = 10000000
             index = ''
-            for e in range(0, len(x)):
-                dist = distance(i, centroidSet[e])
+            for e in range(0, len(centroids)):
+                dist = distance(i, centroids[e])
                 if dist < prevDist:
                     prevDist = dist
                     index = e
             groups[index].append(i)
-        for i in range(0, len(x)):
+        for i in range(0, len(centroids)):
             totals = {
                 'r': 0,
                 'g': 0,
@@ -62,40 +84,28 @@ def getCentroid(img, x, names):
                 totals['r'] += e.r
                 totals['g'] += e.g
                 totals['b'] += e.b
-            centroidSet[i].r = totals['r'] / (len(groups[i]) + 1)
-            centroidSet[i].g = totals['g'] / (len(groups[i]) + 1)
-            centroidSet[i].b = totals['b'] / (len(groups[i]) + 1)
+            centroids[i].r = totals['r'] / (len(groups[i]) + 1)
+            centroids[i].g = totals['g'] / (len(groups[i]) + 1)
+            centroids[i].b = totals['b'] / (len(groups[i]) + 1)
     finalData = {
-        'centroids': centroidSet,
+        'centroids': centroids,
         'names': names
     }
     return finalData
 
-# Get input
-myImage = input('Image: ')
-coordsFileName = input('File with coords of colors: ')
-namesFileName = input('File with color names: ')
-
-# Prepare coordinates and names
-coordsFile = open(coordsFileName, 'r')
-coords = []
-for i in coordsFile:
-    coords.append(int(i))
-coordsFile.close()
-namesFile = open(namesFileName, 'r')
-myNames = []
-for i in namesFile:
-    myNames.append(i)
-namesFile.close()
+# Read data
+trainingData = ''
+with open('trainingData.txt', 'r') as dataFile:
+    trainingData = dataFile.read()
 
 # Get centroids
-data = getCentroid('image.jpg', coords, myNames)
-centroids = data['centroids']
+centroidData = getCentroid(trainingData)
+centroidsArray = centroidData['centroids']
 
 # Write output
 output = ''
-for i in range(0, len(centroids)):
-    output += centroids[i].toString() + ' ' + data['names'][i]
+for i in range(0, len(centroidsArray)):
+    output += centroidsArray[i].toString() + ' ' + centroidData['names'][i] + '\n'
 outputFile = open('training.txt', 'w')
 outputFile.write(output)
 outputFile.close()
