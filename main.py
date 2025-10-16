@@ -1,7 +1,7 @@
 import numpy as np
 from skimage import color
 
-mode = "rgb"
+mode = "rgb"  # Change to "lab" for Lab color space
 
 colors = np.array([
     [255,   0,   0],   # Red
